@@ -33,5 +33,9 @@ contract Fallback {
         emit Log("receive", msg.sender, msg.value, "");
     }
 
+    function test() returns (uint s){
+        return 1;
+    }
+
 
 }
