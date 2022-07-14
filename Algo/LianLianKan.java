@@ -27,6 +27,11 @@ public class LianLianKan {
             return false;
         }
 
+        // bug 首尾必须相同
+        if (data[x1][y1] == data[x2][y2]) {
+            return false;
+        }
+
         data[x1][y1] = 0;
         data[x2][y2] = 0;
         dfs(a.getX(), a.getY(), 0, 0);
