@@ -8,6 +8,8 @@ contract MultiCall {
         require(targets.length == data.length, "target length != data length");
         bytes[] memory results = new bytes[](data.length);
         for (uint i; i < targets.length; i++) {
+            // At the compiler level, only pure and view types of functions can be compiled
+            // into staticcall
             (bool success, bytes memory result) = targets[i].staticcall(data[i]);
             require(success, "call failed");
             results[i] = result;
