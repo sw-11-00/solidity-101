@@ -38,7 +38,7 @@ Avalanche引入了动态且仅限追加的DAG(有向无环图)结构和传递投
 
 ### Tendermint Consensus
 
-Tendermint Consensus是一种基于BFT的POS共识算法，主要由共识引擎Tendermint Core和接口ABCI组成。
+Tendermint Consensus是一种基于BFT的POS共识算法，主要由共识引擎Tendermint Core和接口ABCI组成。Tendermint consensus是首个互联网级别可用的BFT的共识协议，相比较于PBFT等经典的共识协议简化了View-Change等复杂的切换过程，更适合公链上使用。
 
 **Tendermint Core**
 
