@@ -70,3 +70,15 @@ contract Template {
 abi.encodePacked(type(Template).creationCode, abi.encode(3))
 ```
 
+构造方法参数的编码是如何确定的？
+
+```solidity
+contract NamedCoffeeCoin {
+    constructor(string memory _symbol, string memory _name, address _to) {
+        ...
+    }
+    ...
+}
+```
+
+一共有3个参数。如果我们希望传入`COFFEE`、`Cappuccino`以及`0x32ABb0DD3BC57d6406d3F499ccaa761996F4ddBb`，就需要把这3个参数编码。这里我们使用一个能在线编码的网页[https://abi.hashex.org](https://abi.hashex.org/)，直接输入构造方法参数，直接把编码后的构造方法参数复制出来即可。(https://www.liaoxuefeng.com/article/1430588932227106)
