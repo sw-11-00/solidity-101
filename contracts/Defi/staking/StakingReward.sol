@@ -1,5 +1,7 @@
 pragma solidity ^0.8.0;
 
+
+// https://www.youtube.com/watch?v=b7F9q9Jsfvw Math
 contract StakingReward {
 
     IERC20 public immutable stakingToken;
