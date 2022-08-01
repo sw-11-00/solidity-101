@@ -118,5 +118,28 @@ Used by Ethereum 2.0, Tendermint/Cosmos
     - A committed block cannot be reverted and the processed result is consistent among all honest nodes
   - **Liveness: a block will be eventually proposed and committed**
 
-### Simple (But Wrong) Algorithm (Early EOS)
+### Why BFT Can Be Easily Wrong?
+
+- Views
+  - Local view (Each node’s view)
+    - No idea of Byzantine nodes
+    - No idea of other nodes’ views
+  - Global view (God’s view)
+    - Who are Byzantine
+    - All nodes views
+- **No one has God’s view**
+  - There are a thousand Hamlets in a thousand people's eyes!
+- Key question:
+  - I know that majority of others agree on the same block?
+    - And such agreement will not be reverted
+
+### How Modern BFT Algorithm Works?
+
+- To reach an agreement of a new block, a multiple **voting phrases** are broadcasted in P2P to make sure
+  - I know that **+2/3** knows the block and agree on it
+- Commit: Signatures from the parties that prove the majority agreement of the block
+- When a block is agreed, the honest parties (validators) will never revert the block, i.e., the block is finalized
+  - The voting time determines the finalization time
+  - If the finalization time is small (e.g., 5 sec), then we have **instant finality**
+    - vs. probabilistic finality in PoW
 
