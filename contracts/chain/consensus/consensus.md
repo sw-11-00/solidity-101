@@ -143,3 +143,53 @@ Used by Ethereum 2.0, Tendermint/Cosmos
   - If the finalization time is small (e.g., 5 sec), then we have **instant finality**
     - vs. probabilistic finality in PoW
 
+### Security Model
+
+- Let n = 3 k + 1
+- If f <= k, then the network will continue to work
+- **If k < f < 2k + 1**, then the network will suspend
+  - Repeatedly voting or halt
+- If f >= 2k + 1, then the network will break
+  - If observing a fork, a honest node will not revert locally-finalized block
+    - Just log consensus failure and stop working
+  - An external observer relying on malicious nodes’ state may
+    - Suffer from double-spending attack
+    - Suffer from arbitrary state change (e.g., modify balance)
+
+### Application BlockChain Interface (ABCI)
+
+- Offload blockchain ledger/transaction layer to user-defined applications
+- Call interface:
+  - **InitChain**: Called once when the node is up, recover necessary state, **return validators**
+  - **CheckTx**: Determine a tx is valid before putting it into mempool
+  - **BeginBlock => DeliverTx\* => EndBlock => CommitBlock**: called when a block collects
+    - DeliverTx may return that a tx is invalid
+    - EndBlock may **change validator set**
+    - CommitBlock will remove committed txs from mempool
+  - https://github.com/tendermint/spec/tree/master/spec/abci
+
+### Inter-Blockchain Communication (IBC)
+
+- BFT with commit is very friendly to light client
+  - Only need to keep the headers with validator changes
+  - Can be used to communicate (with cryptographic proof) with other chains
+
+### Issues on Tendermint
+
+- Validators must reach agreement on each block	
+  - Cannot have a large number of validators such as ~10,000 nodes
+  - Preferred ~100 nodes
+- Complicated with customized P2P layers
+  - Hard to have fine granularity control of consensus
+- Delayed execution issue
+  - Problem and solution reported by us (namely ABCIx) => ABCI++
+
+### Applications
+
+- Binance Chain
+  - Customized DEX
+- Polygon
+  - Two-layer with Tendermint (Heimdall) / Geth-fork (Bor)
+- Why not integrate Tendermint into Geth?
+  - Enjoy Geth’s stability / compatibility
+
