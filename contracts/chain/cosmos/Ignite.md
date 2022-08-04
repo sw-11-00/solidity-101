@@ -21,3 +21,12 @@ The `github.com` URL in the argument is a string that is used for the Go module 
 - `x`: modules
 - `vue`: scaffolded web application (optional)
 - `config.yml`: configuration file
+
+
+
+### Common commands
+
+```shell
+spidexd keys export alice --unarmored-hex --unsafe // 输出私钥
+```
+
