@@ -28,5 +28,19 @@ The `github.com` URL in the argument is a string that is used for the Go module 
 
 ```shell
 spidexd keys export alice --unarmored-hex --unsafe // 输出私钥
+spidexd tx bank send alice spdx1ueze0pwan3943g008myytfemvka00grtz3qjdy 1000000000000aspx --gas-prices 0.01aspx --gas-adjustment 1.5 --gas=auto -y // 打钱
+hermes keys list band-laozi-testnet5 // 查看地址
+hermes health-check // 启动relayer之前跑这个
+```
+
+
+
+### Bug
+
+```javascript
+// 1. Reason: gRPC call failed with status: status: Unknown, message: "transport error", details: [], metadata: MetadataMap { headers: {} }
+// 关闭代理
+
+// 2. 
 ```
 
