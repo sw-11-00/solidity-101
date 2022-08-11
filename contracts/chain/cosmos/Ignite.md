@@ -31,6 +31,16 @@ spidexd keys export alice --unarmored-hex --unsafe // 输出私钥
 spidexd tx bank send alice spdx1ueze0pwan3943g008myytfemvka00grtz3qjdy 1000000000000aspx --gas-prices 0.01aspx --gas-adjustment 1.5 --gas=auto -y // 打钱
 hermes keys list band-laozi-testnet5 // 查看地址
 hermes health-check // 启动relayer之前跑这个
+
+hermes create client band-laozi-testnet5 spidex_9000-1
+hermes create connection spidex_9000-1 band-laozi-testnet5
+hermes create channel --port-a transfer --port-b transfer spidex_9000-1 connection-0
+
+hermes start // 启动relayer
+
+
+// proto相关
+ignite generate proto-go --yes
 ```
 
 
