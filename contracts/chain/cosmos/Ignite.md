@@ -30,8 +30,12 @@ The `github.com` URL in the argument is a string that is used for the Go module 
 // proto相关
 ignite generate proto-go --yes
 
-ignite chain serve
-ignite chain build
+ignite chain serve // development tool 不能用于生产	
+ignite chain build // 生成的bin文件在~/go/bin中
+ignite scaffold chain interchange --no-module // without a default module
+ignite scaffold chain foo --address-prefix bar // To use a custom address prefix use the "--address-prefix" flag
+
+
 
 spidexd keys export alice --unarmored-hex --unsafe // 输出私钥
 spidexd tx bank send alice spdx1ueze0pwan3943g008myytfemvka00grtz3qjdy 1000000000000aspx --gas-prices 0.01aspx --gas-adjustment 1.5 --gas=auto -y // 打钱
