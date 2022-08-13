@@ -108,11 +108,11 @@ Used by Ethereum 2.0, Tendermint/Cosmos
 - Famous algorithms
   - Practical BFT, M. Castro, OSDI99
   - **Tendermint - most mature and battle-tested BFT algorithm**
-- Tendermint setup:
-  - n = 3 f + 1 validators with *known public keys (or address)*
-    - 1 proposer/leader (fixed at a specific height, may be Byzantine)
-    - n - 1 replicas/followers
-  - f validators are Byzantine and 2f + 1 are honest
+- **Tendermint setup:**
+  - **n = 3 f + 1 validators with *known public keys (or address)***
+    - **1 proposer/leader (fixed at a specific height, may be Byzantine)**
+    - **n - 1 replicas/followers**
+  - **f validators are Byzantine and 2f + 1 are honest**
 - Goals:
   - **Safety: the system behaves as a centralized system**
     - A committed block cannot be reverted and the processed result is consistent among all honest nodes
