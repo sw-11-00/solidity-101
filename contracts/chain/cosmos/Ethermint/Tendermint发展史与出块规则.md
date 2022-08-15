@@ -36,3 +36,42 @@ proposer的选择顺序与Validator的votingPower(投票力)有关，为了防�
 
 
 
+### Round-based协议
+
+在Tendermint中一共有三种类型的投票：prevote、precommit和commit，当一个block被全网络commit的话，意味着这个block已经被全网超过2/3的Validator签名并广播了。
+
+Vote包含Height、Round、Type、Block Hash、Signature。当链运行到一个新的Height的时候，系统会运行一个round-based协议来决定下一个block。Round-based协议由以下三个步骤构成：proposal、prevote、precommit，以及两个特殊步骤：commit、NewHeight。其中propose、prevote和precommit会分别占用整个round1/3时间，每一个round的时间会比上一个round的时间长一点，这就是为了让网络在部分同步的情况下最终达成一致性。
+
+Round-based协议是一个状态机，主要有NewHeight -> Propose -> Prevote -> Precommit -> Commit一共5个状态，上述每一个状态都称为一个step，首尾的NewHeight和Commit这两个Step被称为特殊的Step，而中间循环的三个Step则被称为一个round，是共识阶段，是算法的核心原理所在。一个块的最终提交(Commit)可能要需要多个Round过程，是因为有许多原因会导致当前Round不成功(比如出块节点Offline、提出的块是无效块、收到的Prevote或者Precommit票数不够+2/3等，出现这种情况，解决方案就是移步到下一轮，或者增加timeout时间)。
+
+当区块链达到一个新的高度时进入到NewHeight阶段，接下来Proposal阶段会提交一个Proposal，Prevote阶段会对收到的Proposal进行Prevote投票，在Precommit阶段收集到+2/3投票后对Block进行Precommit投票，如果收集到+2/3Precommit投票后进入Commit阶段，如果没有收集到+2/3Precommit投票会再次进入到Propose阶段。在共识期间，如果收到+2/3commit投票那么直接进入commit阶段。
+
+#### Proposal
+
+在每一轮开始前都会通过Round-robin方式选出一个Propose，选出的Proposer会提交这一轮的proposal。在propose开始阶段，被选中的Proposer会给全网络广播一个proposal，如果Proposer锁定在上一轮中的block上，那么proposer在本轮中发起的proposal会是锁定的block，并且在proposal中加上一个Proof-of-lock字段。
+
+#### Prevote
+
+在Prevote阶段，每个Validator会判断自己是否锁定在上一轮的Proposed区块上，如果锁定在之前的Proposal区块中，那么在本轮中继续为之前锁定的Proposal区块签名并广播Prevote投票，否则为当前轮次中接收到的Proposal区块签名并广播Prevote投票。如果由于某些原因当前Validator并没有收到任何Proposal区块，那么签名并广播一个空的Prevote投票。
+
+#### Precommit
+
+在precommit开始阶段，每个Validator会判断，如果收集到了超过2/3 prevote投票，那么为这个区块签名并广播precommit投票，并且当前Validator会锁定在这个区块上，同时释放之前锁定的区块，一个Validator一次只能锁定在一个区块上。如果一个Validator收集到超过2/3空区块（nil)的prevote投票，那么释放之前锁定的区块。处于锁定状态的Validator会为锁定的区块收集prevote投票，并把这些投票打成包放入proof-of-lock中，proof-of-lock会在之后的propose阶段用到。如果一个Validator没有收集到超过2/3的prevote投票，那么它不会锁定在任何区块上。这里，介绍一个重要概念：PoLC，全称为 Proof of Lock Change，表示在某个特定的高度和轮数(height, round)，对某个块或 nil (空块)超过总结点 2/3 的Prevote投票集合，简单来说 PoLC 就是 Prevote 的投票集。
+
+在precommit阶段后期，如果Validator收集到超过2/3的precommit投票，那么Validator进入到commit阶段。否则进入下一轮的propose阶段。
+
+#### Commit
+
+commit阶段分为两个并行的步骤：
+
+1. Validator收到了被全网commit的区块，Validator会为这个区块广播一个commit投票。
+2. Validator需要为被全网络precommit的区块，收集到超过2/3commit投票。
+
+一旦两个条件全部满足了，节点会将commitTime设置到当前时间上，并且会进入NewHeight阶段。在整个共识过程的任何阶段，一旦节点收到超过2/3commit投票，那么它会立刻进入到commit阶段。
+
+### 为什么不会分叉
+
+如果小于1/3节点是拜占庭节点(如果大于等于1/3，共识就没法达成了)。当Validator commit了区块B，那么表示有大于2/3的节点在R轮投了pre commit，这表示至少有大于1/3节点被lock在了R' > R(为什么是大于1/3节点，因为就是大于2/3减去小于1/3)。如果这个时候有针对同一区块高度的投票，由于+1/3节点被lock在了R'轮，所以不会有+2/3的节点投prevote，也就不会在同一高度达成一个新的共识区块，所以就不会分叉。
+
+所以Tendermint不分叉是基于它是BFT共识，然后加上LockedBlock共同完成。
+
