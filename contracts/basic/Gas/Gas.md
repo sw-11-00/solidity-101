@@ -5,6 +5,14 @@
 
 
 
+### 深入了解Gas计算
+
+https://www.youtube.com/watch?v=idczt1ce6t4
+
+https://www.youtube.com/watch?v=24Oa_f6P4O0
+
+- 只读操作是需要花费Gas，但是不需要我们付费
+
 ### 清单
 
 - 减少链上数据
