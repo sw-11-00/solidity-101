@@ -26,3 +26,6 @@ $$x * y = k$$
 
 这样就把价格做了离散化处理，每一个position对应两个tick，tick_lower和tick_upper，而且不同的position可以共用同一个tick，只有被选做某个position的价格边界的tick才会被实例化，同时在tick上记录流动性的变化。
 
+
+
+https://www.youtube.com/channel/UCJWh7F3AFyQ_x01VKzr9eyA V3机制视频讲解
