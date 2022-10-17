@@ -2,7 +2,7 @@
 
 1. npx hardhat compile
 2. 打开artifacts\build-info路径下对应json文件
-3. Copy input字段内容(只要input字段里面的内容)
+3. Copy input字段内容(只要input字段里面的内容, 可以先定位到output，他之上的即为input的内容)
 4. Etherscan合约验证
 
 
